@@ -1,1 +1,39 @@
-<p>login works!</p>
+<div class="loginContainer">
+  <div class="loginBox">
+    <h2 class="loginTitle">Login</h2>
+
+    @if (formErrors.general) {
+    <div class="errorMessage">
+      {{ formErrors.general }}
+    </div>
+    }
+
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <div class="inputGroup">
+        <div class="formField">
+          <input class="formInput" [(ngModel)]="email" name="email" placeholder="Email" type="email"
+            [class.hasError]="formErrors.email" />
+          @if (formErrors.email) {
+          <div class="fieldError">
+            {{ formErrors.email }}
+          </div>
+          }
+        </div>
+
+        <div class="formField">
+          <input class="formInput" [(ngModel)]="password" name="password" type="password" placeholder="Password"
+            [class.hasError]="formErrors.password" />
+          @if (formErrors.password) {
+          <div class="fieldError">
+            {{ formErrors.password }}
+          </div>
+          }
+        </div>
+      </div>
+
+      <button class="loginButton" type="submit">
+        login
+      </button>
+    </form>
+  </div>
+</div>

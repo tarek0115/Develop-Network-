@@ -1,1 +1,93 @@
-<p>products works!</p>
+<div class="productsContainer">
+  @if (showDeletePopup && productToDelete) {
+  <div class="deletePopupOverlay" (click)="closeDeletePopup()">
+    <div class="deletePopup" (click)="$event.stopPropagation()">
+      <h3 class="popupTitle">Delete Product</h3>
+      <p class="popupMessage">
+        Are you sure you want to delete "<strong>{{ productToDelete.name }}</strong>"?
+        This action cannot be undone.
+      </p>
+      <div class="popupActions">
+        <button class="cancelButton" (click)="closeDeletePopup()">Cancel</button>
+        <button class="confirmDeleteButton" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="headerSection">
+    <h2>Products</h2>
+    <button class="logoutButton" (click)="logout()">Logout</button>
+  </div>
+
+  <div class="formSection">
+    <h3>{{ editingId ? 'Edit Product' : 'Add Product' }}</h3>
+
+    <div class="inputGroup">
+      <div class="inputField">
+        <input [(ngModel)]="name" placeholder="Name" class="formInput" [class.inputError]="formErrors.name" />
+        @if (formErrors.name) {
+        <div class="errorMessage">{{ formErrors.name }}</div>
+        }
+      </div>
+
+      <div class="inputField">
+        <input type="number" [(ngModel)]="price" placeholder="Price" class="formInput"
+          [class.inputError]="formErrors.price" />
+        @if (formErrors.price) {
+        <div class="errorMessage">{{ formErrors.price }}</div>
+        }
+      </div>
+
+      <div class="inputField">
+        <input type="number" [(ngModel)]="stock" placeholder="Stock" class="formInput"
+          [class.inputError]="formErrors.stock" />
+        @if (formErrors.stock) {
+        <div class="errorMessage">{{ formErrors.stock }}</div>
+        }
+      </div>
+    </div>
+
+    <div class="buttonGroup">
+      <button class="saveButton" (click)="save()">
+        {{ editingId ? 'Update' : 'Add' }}
+      </button>
+
+      @if (editingId) {
+      <button class="cancelButton" (click)="reset()">Cancel</button>
+      }
+    </div>
+  </div>
+
+  <table class="productsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of products$ | async; track $index) {
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price | currency }}</td>
+        <td>{{ product.stock }}</td>
+        <td>
+          <span [class.statusInStock]="product.stock > 0" [class.statusOutOfStock]="product.stock === 0">
+            {{ product.stock === 0 ? 'Out of Stock' : 'In Stock' }}
+          </span>
+        </td>
+        <td>
+          <div class="actionButtons">
+            <button class="editButton" (click)="edit(product)">Edit</button>
+            <button class="deleteButton" (click)="deleteProduct(product.id)">Delete</button>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
